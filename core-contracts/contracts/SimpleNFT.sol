@@ -35,7 +35,8 @@ contract SimpleNFT is ABaseNFT {
     ) internal override(ABaseNFT) {
         super._beforeTokenTransfer(from, to, tokenId, batchSize);
 
-        // TODO: your code goes here
+        // only minting and burning are available now
+        require(from==address(0) || to==address(0),"Simple solution :)");
 
     }
 }

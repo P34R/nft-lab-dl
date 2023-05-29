@@ -18,6 +18,14 @@
             :error-message="getFieldErrorMessage('link')"
             @blur="touchField('link')"
           />
+          <input-field
+            v-model="form.address"
+            class="nfts-page-mint-modal__input"
+            :placeholder="$t('Enter the receiver address')"
+            :disabled="isFormDisabled"
+            :error-message="getFieldErrorMessage('link')"
+            @blur="touchField('link')"
+          />
         </div>
       </div>
 
@@ -63,6 +71,7 @@ const emit = defineEmits<{
 const form = reactive({
   name: '',
   link: '',
+  address: '',
 })
 
 const { t } = useI18n({ useScope: 'global' })
@@ -74,15 +83,16 @@ const { isFormValid, touchField, getFieldErrorMessage } = useFormValidation(
   form,
   {
     link: { required, url },
+    address: { required },
   },
 )
 
 const mintNft = async () => {
-  if (!isFormValid() || !provider.selectedAddress) return
+  if (!isFormValid() || !form.address || !provider.selectedAddress) return
   disableForm()
   try {
     const tx = await erc721.mint(
-      provider.selectedAddress,
+      form.address,
       Date.now(),
       form.link,
     )
